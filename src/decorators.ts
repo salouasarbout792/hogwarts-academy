@@ -53,7 +53,7 @@ export function MeasureTime(
   };
 }
 
-// Exercice 4 : refuse un sort dont la puissance est négative.
+// Exercise 4: rejects a spell whose power is negative.
 export function ValidateSpellPower(
   target: object,
   propertyKey: string | symbol,
@@ -80,7 +80,7 @@ export function ValidateSpellPower(
   };
 }
 
-// Exercice 5 : met en cache les résultats d'une méthode synchrone (une Map par instance).
+// Exercise 5: caches the results of a synchronous method (one Map per instance).
 export function Cache(
   target: object,
   propertyKey: string | symbol,

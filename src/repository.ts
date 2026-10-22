@@ -29,12 +29,12 @@ export class Repository<T extends { id: number }> {
 }
 
 export class WizardRepository extends Repository<Wizard> {
-  // Exercice 2 : Wizard["house"] = type à accès indexé (donne l'union House).
+  // Exercise 2: Wizard["house"] is an indexed access type (the House union).
   findByHouse(house: Wizard["house"]): Wizard[] {
     return this.getAll().filter(wizard => wizard.house === house);
   }
 
-  // Exercice 1 : l'appelant ne fournit pas l'id, le repository l'attribue.
+  // Exercise 1: the caller does not provide the id, the repository assigns it.
   addNewWizard(newWizard: NewWizard): Wizard {
     const nextId =
       this.getAll().reduce((max, wizard) => Math.max(max, wizard.id), 0) + 1;
@@ -45,7 +45,7 @@ export class WizardRepository extends Repository<Wizard> {
   }
 }
 export class SpellRepository extends Repository<Spell> {
-  // Exercice 4 : on applique le décorateur sur add().
+  // Exercise 4: the decorator is applied to add().
   @ValidateSpellPower
   override add(spell: Spell): void {
     super.add(spell);

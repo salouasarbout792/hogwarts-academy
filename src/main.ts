@@ -12,12 +12,13 @@ import {
   type AttackSpell,
   type NonHealingCategory,
   type SpellCastEvent,
+  type NewWizard,
 } from "./types";
 
 import { WizardRepository, SpellRepository } from "./repository";
 import { Log, Cache } from "./decorators";
 
-// Exercice 6 : les 4 maisons autorisées.
+// Exercise 6: the four allowed houses.
 const validHouses: readonly House[] = [
   "Gryffindor",
   "Slytherin",
@@ -25,7 +26,7 @@ const validHouses: readonly House[] = [
   "Hufflepuff"
 ];
 
-// Exercice 6 : type guard dédié ; "value is House" est un prédicat de type.
+// Exercise 6: dedicated type guard ("value is House" is a type predicate).
 function isHouse(value: unknown): value is House {
   return (
     typeof value === "string" &&
@@ -33,7 +34,7 @@ function isHouse(value: unknown): value is House {
   );
 }
 
-// Exercice 6 : isWizard utilise maintenant isHouse() (refuse "Durmstrang").
+// Exercise 6: isWizard now relies on isHouse() (rejects "Durmstrang").
 function isWizard(value: unknown): value is Wizard {
   if (typeof value !== "object" || value === null) {
     return false;
@@ -87,12 +88,12 @@ class AcademyService {
   }
 }
 
-// Exercice 3 : gestionnaire qui n'accepte QUE les événements "spell-cast".
+// Exercise 3: handler that only accepts "spell-cast" events.
 function handleSpellCast(event: SpellCastEvent): void {
   console.log(`Wizard ${event.wizardId} cast ${event.spellName}`);
 }
 
-// Exercice 5 : service avec une méthode mise en cache.
+// Exercise 5: service with a cached method.
 class SpellCalculator {
   @Cache
   calculatePower(basePower: number, multiplier: number): number {
@@ -146,56 +147,6 @@ spells.add({
 
 const academy = new AcademyService(wizards, spells);
 
-console.log("\n=== Exercice 1 : ajouter un sorcier (sans id) ===");
-const ron = wizards.addNewWizard({
-  name: "Ron Weasley",
-  house: "Gryffindor",
-  level: 4,
-  active: true
-});
-console.log("Sorcier créé avec l'id :", ron.id);
-
-console.log("\n=== Exercice 3 : handleSpellCast (Extract) ===");
-handleSpellCast({
-  type: "spell-cast",
-  wizardId: 1,
-  spellName: "Expelliarmus"
-});
-// handleSpellCast({ type: "level-up", wizardId: 1, newLevel: 2 }); // Erreur de compilation
-
-console.log("\n=== Exercice 4 : valider la puissance d'un sort ===");
-spells.add({
-  id: 103,
-  name: "Protego Maxima",
-  category: "defense",
-  power: 50
-});
-
-try {
-  spells.add({
-    id: 104,
-    name: "Invalid Spell",
-    category: "attack",
-    power: -10
-  });
-} catch (error: unknown) {
-  if (error instanceof Error) {
-    console.log("Sort refusé :", error.message);
-  }
-}
-console.log("Nombre de sorts enregistrés :", spells.getAll().length);
-
-console.log("\n=== Exercice 5 : méthode avec cache ===");
-const calculator = new SpellCalculator();
-console.log(calculator.calculatePower(10, 3)); // MISS
-console.log(calculator.calculatePower(10, 3)); // HIT
-console.log(calculator.calculatePower(5, 2));  // MISS
-
-console.log("\n=== Exercice 2 : filtrer par maison ===");
-console.log(wizards.findByHouse("Gryffindor"));
-console.log(wizards.findByHouse("Slytherin"));
-// wizards.findByHouse("Durmstrang"); // Erreur de compilation : pas une House
-
 console.log("\n--- Cast a spell ---");
 console.log(academy.castSpell(1, 101));
 
@@ -229,7 +180,62 @@ const events: AcademyEvent[] = [
 ];
 console.log(academy.getSpellEvents(events));
 
-console.log("\n=== Exercice 6 : type guard strict ===");
+// ---------------------------------------------------------------------------
+// TAF - Exercises (tests)
+// ---------------------------------------------------------------------------
+
+console.log("\n=== Exercise 1: add a new wizard (without id) ===");
+const newWizard: NewWizard = {
+  name: "Ron Weasley",
+  house: "Gryffindor",
+  level: 4,
+  active: true
+};
+const createdWizard = wizards.addNewWizard(newWizard);
+console.log("Wizard created with id:", createdWizard.id);
+
+console.log("\n=== Exercise 2: find wizards by house ===");
+console.log(wizards.findByHouse("Gryffindor"));
+console.log(wizards.findByHouse("Slytherin"));
+// wizards.findByHouse("Durmstrang"); // Compile error: not a House
+
+console.log("\n=== Exercise 3: spell-cast events (Extract) ===");
+handleSpellCast({
+  type: "spell-cast",
+  wizardId: 1,
+  spellName: "Expelliarmus"
+});
+// handleSpellCast({ type: "level-up", wizardId: 1, newLevel: 2 }); // Compile error
+
+console.log("\n=== Exercise 4: validate spell power ===");
+spells.add({
+  id: 103,
+  name: "Protego Maxima",
+  category: "defense",
+  power: 50
+});
+
+try {
+  spells.add({
+    id: 104,
+    name: "Invalid Spell",
+    category: "attack",
+    power: -10
+  });
+} catch (error: unknown) {
+  if (error instanceof Error) {
+    console.log("Spell rejected:", error.message);
+  }
+}
+console.log("Registered spells:", spells.getAll().length);
+
+console.log("\n=== Exercise 5: cached method ===");
+const calculator = new SpellCalculator();
+console.log(calculator.calculatePower(10, 3)); // CACHE MISS
+console.log(calculator.calculatePower(10, 3)); // CACHE HIT
+console.log(calculator.calculatePower(5, 2));  // CACHE MISS
+
+console.log("\n=== Exercise 6: strict type guard ===");
 const validData: unknown = {
   id: 1,
   name: "Harry Potter",
