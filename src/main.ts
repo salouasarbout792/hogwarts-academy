@@ -17,16 +17,23 @@ import {
 import { WizardRepository, SpellRepository } from "./repository";
 import { Log, Cache } from "./decorators";
 
+// Exercice 6 : les 4 maisons autorisées.
+const validHouses: readonly House[] = [
+  "Gryffindor",
+  "Slytherin",
+  "Ravenclaw",
+  "Hufflepuff"
+];
+
+// Exercice 6 : type guard dédié ; "value is House" est un prédicat de type.
 function isHouse(value: unknown): value is House {
   return (
-    value === "Gryffindor" ||
-    value === "Slytherin" ||
-    value === "Ravenclaw" ||
-    value === "Hufflepuff"
+    typeof value === "string" &&
+    validHouses.some(house => house === value)
   );
 }
 
-// Type guard: safely narrow unknown data to a Wizard.
+// Exercice 6 : isWizard utilise maintenant isHouse() (refuse "Durmstrang").
 function isWizard(value: unknown): value is Wizard {
   if (typeof value !== "object" || value === null) {
     return false;
@@ -221,6 +228,26 @@ const events: AcademyEvent[] = [
   { type: "wizard-expelled", wizardId: 3 }
 ];
 console.log(academy.getSpellEvents(events));
+
+console.log("\n=== Exercice 6 : type guard strict ===");
+const validData: unknown = {
+  id: 1,
+  name: "Harry Potter",
+  house: "Gryffindor",
+  level: 5,
+  active: true
+};
+
+const invalidData: unknown = {
+  id: 2,
+  name: "Viktor",
+  house: "Durmstrang",
+  level: 5,
+  active: true
+};
+
+console.log(isWizard(validData));   // true
+console.log(isWizard(invalidData)); // false
 
 // Compile-time demonstrations: these aliases are checked by TypeScript.
 type CastArguments = Parameters<AcademyService["castSpell"]>;
