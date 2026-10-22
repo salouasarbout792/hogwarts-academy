@@ -29,6 +29,11 @@ export class Repository<T extends { id: number }> {
 }
 
 export class WizardRepository extends Repository<Wizard> {
+  // Exercice 2 : Wizard["house"] = type à accès indexé (donne l'union House).
+  findByHouse(house: Wizard["house"]): Wizard[] {
+    return this.getAll().filter(wizard => wizard.house === house);
+  }
+
   // Exercice 1 : l'appelant ne fournit pas l'id, le repository l'attribue.
   addNewWizard(newWizard: NewWizard): Wizard {
     const nextId =

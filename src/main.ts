@@ -132,6 +132,11 @@ const ron = wizards.addNewWizard({
 });
 console.log("Sorcier créé avec l'id :", ron.id);
 
+console.log("\n=== Exercice 2 : filtrer par maison ===");
+console.log(wizards.findByHouse("Gryffindor"));
+console.log(wizards.findByHouse("Slytherin"));
+// wizards.findByHouse("Durmstrang"); // Erreur de compilation : pas une House
+
 console.log("\n--- Cast a spell ---");
 console.log(academy.castSpell(1, 101));
 
