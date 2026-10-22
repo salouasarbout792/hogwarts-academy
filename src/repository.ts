@@ -1,5 +1,5 @@
 import type { Wizard, Spell, NewWizard } from "./types";
-import { Log, MeasureTime } from "./decorators";
+import { Log, MeasureTime, ValidateSpellPower } from "./decorators";
 
 export class Repository<T extends { id: number }> {
   private items: T[] = [];
@@ -44,4 +44,10 @@ export class WizardRepository extends Repository<Wizard> {
     return wizard;
   }
 }
-export class SpellRepository extends Repository<Spell> {}
+export class SpellRepository extends Repository<Spell> {
+  // Exercice 4 : on applique le décorateur sur add().
+  @ValidateSpellPower
+  override add(spell: Spell): void {
+    super.add(spell);
+  }
+}

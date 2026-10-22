@@ -146,6 +146,28 @@ handleSpellCast({
 });
 // handleSpellCast({ type: "level-up", wizardId: 1, newLevel: 2 }); // Erreur de compilation
 
+console.log("\n=== Exercice 4 : valider la puissance d'un sort ===");
+spells.add({
+  id: 103,
+  name: "Protego Maxima",
+  category: "defense",
+  power: 50
+});
+
+try {
+  spells.add({
+    id: 104,
+    name: "Invalid Spell",
+    category: "attack",
+    power: -10
+  });
+} catch (error: unknown) {
+  if (error instanceof Error) {
+    console.log("Sort refusé :", error.message);
+  }
+}
+console.log("Nombre de sorts enregistrés :", spells.getAll().length);
+
 console.log("\n=== Exercice 2 : filtrer par maison ===");
 console.log(wizards.findByHouse("Gryffindor"));
 console.log(wizards.findByHouse("Slytherin"));
