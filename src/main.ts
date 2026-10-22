@@ -123,6 +123,15 @@ spells.add({
 
 const academy = new AcademyService(wizards, spells);
 
+console.log("\n=== Exercice 1 : ajouter un sorcier (sans id) ===");
+const ron = wizards.addNewWizard({
+  name: "Ron Weasley",
+  house: "Gryffindor",
+  level: 4,
+  active: true
+});
+console.log("Sorcier créé avec l'id :", ron.id);
+
 console.log("\n--- Cast a spell ---");
 console.log(academy.castSpell(1, 101));
 
