@@ -29,6 +29,9 @@ export type AcademyEvent =
   | { type: "level-up"; wizardId: number; newLevel: number }
   | { type: "wizard-expelled"; wizardId: number };
 
+// Exercice 3 : type des événements de lancement de sort uniquement.
+export type SpellCastEvent = Extract<AcademyEvent, { type: "spell-cast" }>;
+
 // Conditional type: choose an output type based on the spell category.
 export type SpellOutput<T extends SpellCategory> =
   T extends "attack" ? number :

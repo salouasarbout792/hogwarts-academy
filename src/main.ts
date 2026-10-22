@@ -11,6 +11,7 @@ import {
   type WizardUpdate,
   type AttackSpell,
   type NonHealingCategory,
+  type SpellCastEvent,
 } from "./types";
 
 import { WizardRepository, SpellRepository } from "./repository";
@@ -71,12 +72,17 @@ class AcademyService {
     return this.wizards.update(id, changes);
   }
 
-  getSpellEvents(events: AcademyEvent[]): Extract<AcademyEvent, { type: "spell-cast" }>[] {
+  getSpellEvents(events: AcademyEvent[]): SpellCastEvent[] {
     return events.filter(
-      (event): event is Extract<AcademyEvent, { type: "spell-cast" }> =>
+      (event): event is SpellCastEvent =>
         event.type === "spell-cast"
     );
   }
+}
+
+// Exercice 3 : gestionnaire qui n'accepte QUE les événements "spell-cast".
+function handleSpellCast(event: SpellCastEvent): void {
+  console.log(`Wizard ${event.wizardId} cast ${event.spellName}`);
 }
 
 const wizards = new WizardRepository();
@@ -131,6 +137,14 @@ const ron = wizards.addNewWizard({
   active: true
 });
 console.log("Sorcier créé avec l'id :", ron.id);
+
+console.log("\n=== Exercice 3 : handleSpellCast (Extract) ===");
+handleSpellCast({
+  type: "spell-cast",
+  wizardId: 1,
+  spellName: "Expelliarmus"
+});
+// handleSpellCast({ type: "level-up", wizardId: 1, newLevel: 2 }); // Erreur de compilation
 
 console.log("\n=== Exercice 2 : filtrer par maison ===");
 console.log(wizards.findByHouse("Gryffindor"));
