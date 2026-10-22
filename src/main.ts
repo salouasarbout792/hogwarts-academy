@@ -15,7 +15,7 @@ import {
 } from "./types";
 
 import { WizardRepository, SpellRepository } from "./repository";
-import { Log } from "./decorators";
+import { Log, Cache } from "./decorators";
 
 function isHouse(value: unknown): value is House {
   return (
@@ -83,6 +83,16 @@ class AcademyService {
 // Exercice 3 : gestionnaire qui n'accepte QUE les événements "spell-cast".
 function handleSpellCast(event: SpellCastEvent): void {
   console.log(`Wizard ${event.wizardId} cast ${event.spellName}`);
+}
+
+// Exercice 5 : service avec une méthode mise en cache.
+class SpellCalculator {
+  @Cache
+  calculatePower(basePower: number, multiplier: number): number {
+    console.log("Calculating...");
+
+    return basePower * multiplier;
+  }
 }
 
 const wizards = new WizardRepository();
@@ -167,6 +177,12 @@ try {
   }
 }
 console.log("Nombre de sorts enregistrés :", spells.getAll().length);
+
+console.log("\n=== Exercice 5 : méthode avec cache ===");
+const calculator = new SpellCalculator();
+console.log(calculator.calculatePower(10, 3)); // MISS
+console.log(calculator.calculatePower(10, 3)); // HIT
+console.log(calculator.calculatePower(5, 2));  // MISS
 
 console.log("\n=== Exercice 2 : filtrer par maison ===");
 console.log(wizards.findByHouse("Gryffindor"));
